@@ -23,6 +23,5 @@ import { OrderModule } from './order/order.module';
     OrderModule,
   ],
   controllers: [],
-  providers: [configProvider],
 })
 export class AppModule {}

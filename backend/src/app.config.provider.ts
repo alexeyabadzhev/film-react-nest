@@ -1,5 +1,7 @@
-import { Provider } from '@nestjs/common';
+import { Provider, Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+
+export const CONFIG = 'CONFIG';
 
 export const configProvider: Provider = {
   provide: 'CONFIG',
@@ -22,3 +24,9 @@ export interface AppConfigDatabase {
   driver: string;
   url: string;
 }
+
+@Module({
+  providers: [configProvider],
+  exports: [CONFIG],
+})
+export class AppConfigModule {}

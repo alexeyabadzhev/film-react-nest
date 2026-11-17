@@ -6,9 +6,9 @@ import {
   Module,
   OnApplicationShutdown,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { Connection, createConnection } from 'mongoose';
 import { DATABASE_CONNECTION } from './database.constants';
+import { AppConfig, AppConfigModule, CONFIG } from '../app.config.provider';
 
 @Injectable()
 class DatabaseService implements OnApplicationShutdown {
@@ -26,14 +26,17 @@ class DatabaseService implements OnApplicationShutdown {
 
 @Global()
 @Module({
+  imports: [AppConfigModule],
   providers: [
     {
       provide: DATABASE_CONNECTION,
-      inject: [ConfigService],
-      useFactory: async (configService: ConfigService): Promise<Connection> => {
-        const url =
-          configService.get<string>('DATABASE_URL') ??
-          'mongodb://127.0.0.1:27017/prac';
+      inject: [CONFIG],
+      useFactory: async (config: AppConfig): Promise<Connection> => {
+        const { driver, url } = config.database;
+        
+        if (driver !== 'mongodb') {
+          throw new Error('База данных не поддерживается');
+        }
 
         return createConnection(url).asPromise();
       },
