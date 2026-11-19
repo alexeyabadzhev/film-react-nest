@@ -1,29 +1,11 @@
 import { Schema } from 'mongoose';
+import { FilmDto, ScheduleDto } from '../dto/films.dto';
 
-export interface FilmSession {
-  id: string;
-  daytime: string;
-  hall: number;
-  rows: number;
-  seats: number;
-  price: number;
-  taken: string[];
+export interface Film extends FilmDto {
+  schedule: ScheduleDto[];
 }
 
-export interface Film {
-  id: string;
-  rating: number;
-  director: string;
-  tags: string[];
-  title: string;
-  about: string;
-  description: string;
-  image: string;
-  cover: string;
-  schedule: FilmSession[];
-}
-
-export const ScheduleSchema = new Schema<FilmSession>(
+export const ScheduleSchema = new Schema<ScheduleDto>(
   {
     id: { type: String, required: true },
     daytime: { type: String, required: true },

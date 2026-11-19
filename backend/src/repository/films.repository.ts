@@ -15,4 +15,10 @@ export abstract class FilmsRepository {
     sessionId: string,
     seats: string[],
   ): Promise<boolean>;
+
+  abstract releaseSeats(
+    filmId: string,
+    sessionId: string,
+    seats: string[],
+  ): Promise<void>;
 }

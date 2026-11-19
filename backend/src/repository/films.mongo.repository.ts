@@ -2,9 +2,9 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { FilmDto, ScheduleDto } from '../films/dto/films.dto';
 import { Film } from '../films/schemas/film.schema';
-import { convertToFilmDto, convertToScheduleDto } from './films.mapper';
 import { FilmsRepository } from './films.repository';
 import { FILM_MODEL } from './repository.constants';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class MongoFilmsRepository implements FilmsRepository {
@@ -16,7 +16,9 @@ export class MongoFilmsRepository implements FilmsRepository {
       .lean<Film[]>()
       .exec();
 
-    return films.map(convertToFilmDto);
+    return films.map((film) =>
+      plainToInstance(FilmDto, film, { excludeExtraneousValues: true }),
+    );
   }
 
   async findSchedule(filmId: string): Promise<ScheduleDto[] | null> {
@@ -29,7 +31,9 @@ export class MongoFilmsRepository implements FilmsRepository {
       return null;
     }
 
-    return (film.schedule ?? []).map(convertToScheduleDto);
+    return (film.schedule ?? []).map((session) =>
+      plainToInstance(ScheduleDto, session, { excludeExtraneousValues: true }),
+    );
   }
 
   async findSession(
@@ -52,7 +56,9 @@ export class MongoFilmsRepository implements FilmsRepository {
 
     const session = film?.schedule?.[0];
 
-    return session ? convertToScheduleDto(session) : null;
+    return session
+      ? plainToInstance(ScheduleDto, session, { excludeExtraneousValues: true })
+      : null;
   }
 
   async reserveSeats(
@@ -84,5 +90,19 @@ export class MongoFilmsRepository implements FilmsRepository {
       .exec();
 
     return result.modifiedCount > 0;
+  }
+
+  async releaseSeats(
+    filmId: string,
+    sessionId: string,
+    seats: string[],
+  ): Promise<void> {
+    await this.filmModel
+      .updateOne(
+        { id: filmId, 'schedule.id': sessionId },
+        { $pull: { 'schedule.$[session].taken': { $in: seats } } },
+        { arrayFilters: [{ 'session.id': sessionId }] },
+      )
+      .exec();
   }
 }

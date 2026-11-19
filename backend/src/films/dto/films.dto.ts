@@ -1,22 +1,28 @@
+import { Expose, Transform } from 'class-transformer';
+
 export class FilmDto {
-  id: string;
-  rating: number;
-  director: string;
+  @Expose() id: string;
+  @Expose() rating: number;
+  @Expose() director: string;
+  @Expose()
+  @Transform(({ value }) => value ?? [])
   tags: string[];
-  title: string;
-  about: string;
-  description: string;
-  image: string;
-  cover: string;
+  @Expose() title: string;
+  @Expose() about: string;
+  @Expose() description: string;
+  @Expose() image: string;
+  @Expose() cover: string;
 }
 
 export class ScheduleDto {
-  id: string;
-  daytime: string;
-  hall: number;
-  rows: number;
-  seats: number;
-  price: number;
+  @Expose() id: string;
+  @Expose() daytime: string;
+  @Expose() hall: number;
+  @Expose() rows: number;
+  @Expose() seats: number;
+  @Expose() price: number;
+  @Expose()
+  @Transform(({ value }) => value ?? [])
   taken: string[];
 }
 

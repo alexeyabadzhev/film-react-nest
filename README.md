@@ -21,7 +21,8 @@
 Создайте `.env` файл из примера `.env.example`, в нём укажите:
 
 * `DATABASE_DRIVER` - тип драйвера СУБД - в нашем случае это `mongodb` 
-* `DATABASE_URL` - адрес СУБД MongoDB, например `mongodb://127.0.0.1:27017/prac`.  
+* `DATABASE_URL` - адрес СУБД MongoDB, например `mongodb://127.0.0.1:27017/prac` 
+* `PORT` - порт, `3000`
 
 MongoDB должна быть установлена и запущена.
 

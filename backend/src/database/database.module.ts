@@ -33,7 +33,7 @@ class DatabaseService implements OnApplicationShutdown {
       inject: [CONFIG],
       useFactory: async (config: AppConfig): Promise<Connection> => {
         const { driver, url } = config.database;
-        
+
         if (driver !== 'mongodb') {
           throw new Error('База данных не поддерживается');
         }
