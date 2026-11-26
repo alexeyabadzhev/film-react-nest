@@ -1,24 +1,17 @@
 import { Module } from '@nestjs/common';
-import { Connection } from 'mongoose';
-import { DATABASE_CONNECTION } from '../database/database.constants';
-import { DatabaseModule } from '../database/database.module';
-import { FilmSchema } from '../films/schemas/film.schema';
-import { MongoFilmsRepository } from './films.mongo.repository';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Film } from 'src/films/entities/film.entity';
+import { Schedule } from 'src/films/entities/schedule.entity';
 import { FilmsRepository } from './films.repository';
-import { FILM_MODEL } from './repository.constants';
+import { TypeOrmFilmsRepository } from './films.typeorm.repository';
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [TypeOrmModule.forFeature([Film, Schedule])],
   providers: [
-    {
-      provide: FILM_MODEL,
-      inject: [DATABASE_CONNECTION],
-      useFactory: (connection: Connection) =>
-        connection.model('Film', FilmSchema),
-    },
+    TypeOrmFilmsRepository,
     {
       provide: FilmsRepository,
-      useClass: MongoFilmsRepository,
+      useExisting: TypeOrmFilmsRepository,
     },
   ],
   exports: [FilmsRepository],
