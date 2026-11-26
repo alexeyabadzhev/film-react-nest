@@ -20,8 +20,8 @@ function getOrmOptions(config: AppConfig): TypeOrmModuleOptions {
     database: databasename,
     username: username,
     password: password,
-    entities: [Film, Schedule],
-    synchronize: false,
+    entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+    synchronize: true,
   };
 }
 @Global()
