@@ -16,10 +16,13 @@ export const configProvider: Provider = {
     return {
       port,
       database: {
-        driver: configService.get<string>('DATABASE_DRIVER') ?? 'mongodb',
+        driver: configService.get<string>('DATABASE_DRIVER') ?? 'postgres',
         url:
           configService.get<string>('DATABASE_URL') ??
-          'mongodb://127.0.0.1:27017/prac',
+          'postgres://127.0.0.1:5432/films',
+        username: configService.get<string>('DATABASE_USERNAME') ?? 'films',
+        password: configService.get<string>('DATABASE_PASSWORD') ?? '12345678',
+        databasename: configService.get<string>('DATABASE_NAME') ?? 'films',
       },
     };
   },
@@ -33,6 +36,9 @@ export interface AppConfig {
 export interface AppConfigDatabase {
   driver: string;
   url: string;
+  username: string;
+  password: string;
+  databasename: string;
 }
 
 @Module({
